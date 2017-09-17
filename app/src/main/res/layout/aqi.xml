@@ -37,7 +37,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="AQI指数"
+                    android:text="@string/aqi"
                     android:textColor="#fff"/>
             </LinearLayout>
         </RelativeLayout>
@@ -63,7 +63,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="PM2.5指数"
+                    android:text="@string/pm25"
                     android:textColor="#fff"/>
             </LinearLayout>
 

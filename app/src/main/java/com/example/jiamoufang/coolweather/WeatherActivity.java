@@ -1,5 +1,6 @@
 package com.example.jiamoufang.coolweather;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v4.view.GravityCompat;
@@ -21,6 +22,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.jiamoufang.coolweather.gson.Forecast;
 import com.example.jiamoufang.coolweather.gson.Weather;
+import com.example.jiamoufang.coolweather.service.AutoUpdateService;
 import com.example.jiamoufang.coolweather.util.HttpUtil;
 import com.example.jiamoufang.coolweather.util.Utility;
 
@@ -48,7 +50,7 @@ public class WeatherActivity extends AppCompatActivity {
 
     private TextView pm25Text;
 
-    private TextView comforText;
+    private TextView comfortText;
 
     private TextView carWashText;
 
@@ -78,7 +80,7 @@ public class WeatherActivity extends AppCompatActivity {
         forecastLayout = (LinearLayout) findViewById(R.id.forecast_layout);
         aqiText = (TextView)findViewById(R.id.aqi_text);
         pm25Text = (TextView)findViewById(R.id.pm25_text);
-        comforText = (TextView) findViewById(R.id.comfort_text);
+        comfortText = (TextView) findViewById(R.id.comfort_text);
         carWashText = (TextView)findViewById(R.id.car_wash_text);
         sportText = (TextView) findViewById(R.id.sport_text);
         bingPicImg = (ImageView) findViewById(R.id.bing_pic_img);
@@ -155,7 +157,6 @@ public class WeatherActivity extends AppCompatActivity {
     * */
     public void requestWeather(final String weatherId) {
         String weatherUrl = "http://guolin.tech/api/weather?cityid=" + weatherId + "&key=2d2c9ed5a932486394dbcf0a4a89c161";
-        loadBingPic();
 
         HttpUtil.sendOkHttpRequest(weatherUrl, new Callback() {
             @Override
@@ -182,6 +183,7 @@ public class WeatherActivity extends AppCompatActivity {
                             editor.putString("weather", responseText);
                             editor.apply();
                             showWeatherInfo(weather);
+
                         } else {
                             Toast.makeText(WeatherActivity.this, "获取天气信息失败", Toast.LENGTH_SHORT).show();
                         }
@@ -190,7 +192,7 @@ public class WeatherActivity extends AppCompatActivity {
                 });
             }
         });
-        //loadBingPic();
+        loadBingPic();
     }
 
     /*
@@ -231,10 +233,13 @@ public class WeatherActivity extends AppCompatActivity {
         String carWash = "洗车指数：" + weather.suggestion.carWash.info;
         String sport = "运动建议：" + weather.suggestion.sport.info;
 
-        comforText.setText(comfort);
+        comfortText.setText(comfort);
         carWashText.setText(carWash);
         sportText.setText(sport);
 
         weatherLayout.setVisibility(View.VISIBLE);
+
+        Intent intent = new Intent(this, AutoUpdateService.class);
+        startService(intent);
     }
 }
